@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CarSalesControl — Gestão de Veículos</title>
+    <link rel="stylesheet" href="style.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">
+            <i class="fa-solid fa-car-side"></i>
+            <span>CarSalesControl</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-page="dashboard">
+                <i class="fa-solid fa-chart-pie"></i> Dashboard
+            </a>
+            <a href="#" class="nav-item" data-page="veiculos">
+                <i class="fa-solid fa-car"></i> Veículos
+            </a>
+            <a href="#" class="nav-item" data-page="compras">
+                <i class="fa-solid fa-cart-plus"></i> Compras
+            </a>
+            <a href="#" class="nav-item" data-page="vendas">
+                <i class="fa-solid fa-handshake"></i> Vendas
+            </a>
+            <a href="#" class="nav-item" data-page="relatorios">
+                <i class="fa-solid fa-file-chart-column"></i> Relatórios
+            </a>
+        </nav>
+        <div class="sidebar-footer">
+            <span>v1.0.0</span>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="top-bar">
+            <button class="btn-toggle-sidebar" id="btnToggle">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            <h1 class="page-title" id="pageTitle">Dashboard</h1>
+            <div class="top-bar-actions">
+                <span class="date-display" id="dateDisplay"></span>
+            </div>
+        </header>
+
+        <!-- ====== DASHBOARD ====== -->
+        <section class="page active" id="page-dashboard">
+            <div class="cards-grid">
+                <div class="card card-blue">
+                    <div class="card-icon"><i class="fa-solid fa-car"></i></div>
+                    <div class="card-info">
+                        <span class="card-label">Veículos em Estoque</span>
+                        <span class="card-value" id="dash-estoque">0</span>
+                    </div>
+                </div>
+                <div class="card card-dark">
+                    <div class="card-icon"><i class="fa-solid fa-cart-plus"></i></div>
+                    <div class="card-info">
+                        <span class="card-label">Total Investido (Compras)</span>
+                        <span class="card-value" id="dash-investido">R$ 0,00</span>
+                    </div>
+                </div>
+                <div class="card card-dark">
+                    <div class="card-icon"><i class="fa-solid fa-handshake"></i></div>
+                    <div class="card-info">
+                        <span class="card-label">Total Recebido (Vendas)</span>
+                        <span class="card-value" id="dash-recebido">R$ 0,00</span>
+                    </div>
+                </div>
+                <div class="card card-blue">
+                    <div class="card-icon"><i class="fa-solid fa-sack-dollar"></i></div>
+                    <div class="card-info">
+                        <span class="card-label">Lucro Total</span>
+                        <span class="card-value" id="dash-lucro">R$ 0,00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-block">
+                <h2 class="section-title">Últimas Movimentações</h2>
+                <div class="table-wrapper">
+                    <table class="data-table" id="dash-movimentacoes">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Tipo</th>
+                                <th>Veículo</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dash-movimentacoes-body">
+                            <tr>
+                                <td colspan="4" class="empty-row">Nenhuma movimentação registrada</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- ====== VEÍCULOS ====== -->
+        <section class="page" id="page-veiculos">
+            <div class="page-actions">
+                <button class="btn btn-primary" id="btnNovoVeiculo">
+                    <i class="fa-solid fa-plus"></i> Novo Veículo
+                </button>
+                <div class="search-box">
+                    <i class="fa-solid fa-search"></i>
+                    <input type="text" id="searchVeiculos" placeholder="Buscar veículo..." />
+                </div>
+            </div>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Placa</th>
+                            <th>Marca / Modelo</th>
+                            <th>Ano</th>
+                            <th>Cor</th>
+                            <th>Combustível</th>
+                            <th>Status</th>
+                            <th>Preço Compra</th>
+                            <th>Preço Venda</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="veiculosBody">
+                        <tr>
+                            <td colspan="9" class="empty-row">Nenhum veículo cadastrado</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ====== COMPRAS ====== -->
+        <section class="page" id="page-compras">
+            <div class="page-actions">
+                <button class="btn btn-primary" id="btnNovaCompra">
+                    <i class="fa-solid fa-plus"></i> Registrar Compra
+                </button>
+            </div>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Veículo</th>
+                            <th>Fornecedor</th>
+                            <th>Valor Pago</th>
+                            <th>Observações</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="comprasBody">
+                        <tr>
+                            <td colspan="6" class="empty-row">Nenhuma compra registrada</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ====== VENDAS ====== -->
+        <section class="page" id="page-vendas">
+            <div class="page-actions">
+                <button class="btn btn-primary" id="btnNovaVenda">
+                    <i class="fa-solid fa-plus"></i> Registrar Venda
+                </button>
+            </div>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Veículo</th>
+                            <th>Comprador</th>
+                            <th>Valor Compra</th>
+                            <th>Valor Venda</th>
+                            <th>Lucro</th>
+                            <th>Margem %</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="vendasBody">
+                        <tr>
+                            <td colspan="8" class="empty-row">Nenhuma venda registrada</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ====== RELATÓRIOS ====== -->
+        <section class="page" id="page-relatorios">
+            <div class="cards-grid">
+                <div class="card card-blue">
+                    <div class="card-icon"><i class="fa-solid fa-car"></i></div>
+                    <div class="card-info">
+                        <span class="card-label">Veículos Vendidos</span>
+                        <span class="card-value" id="rel-vendidos">0</span>
+                    </div>
+                </div>
+                <div class="card card-dark">
+                    <div class="card-icon"><i class="fa-solid fa-percent"></i></div>
+                    <div class="card-info">
+                        <span class="card-label">Margem Média de Lucro</span>
+                        <span class="card-value" id="rel-margem">0%</span>
+                    </div>
+                </div>
+                <div class="card card-dark">
+                    <div class="card-icon"><i class="fa-solid fa-arrow-trend-up"></i></div>
+                    <div class="card-info">
+                        <span class="card-label">Maior Lucro em Uma Venda</span>
+                        <span class="card-value" id="rel-maior-lucro">R$ 0,00</span>
+                    </div>
+                </div>
+                <div class="card card-blue">
+                    <div class="card-icon"><i class="fa-solid fa-warehouse"></i></div>
+                    <div class="card-info">
+                        <span class="card-label">Estoque (R$)</span>
+                        <span class="card-value" id="rel-estoque-valor">R$ 0,00</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-block">
+                <h2 class="section-title">Detalhamento por Veículo Vendido</h2>
+                <div class="table-wrapper">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Data Compra</th>
+                                <th>Data Venda</th>
+                                <th>Veículo</th>
+                                <th>Custo</th>
+                                <th>Venda</th>
+                                <th>Lucro</th>
+                                <th>Margem</th>
+                            </tr>
+                        </thead>
+                        <tbody id="relatoriosBody">
+                            <tr>
+                                <td colspan="7" class="empty-row">Nenhuma venda registrada</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- ====== MODALS ====== -->
+
+    <!-- Modal Veículo -->
+    <div class="modal-overlay" id="modalVeiculo">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalVeiculoTitle">Cadastrar Veículo</h2>
+                <button class="btn-close" data-close="modalVeiculo"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="formVeiculo" class="form-grid">
+                    <input type="hidden" id="veiculoId" />
+                    <div class="form-group">
+                        <label>Placa *</label>
+                        <input type="text" id="vPlaca" placeholder="ABC-1234" maxlength="8" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Marca *</label>
+                        <input type="text" id="vMarca" placeholder="Ex: Toyota" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Modelo *</label>
+                        <input type="text" id="vModelo" placeholder="Ex: Corolla" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Ano Fabricação *</label>
+                        <input type="number" id="vAnoFab" placeholder="2020" min="1900" max="2099" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Ano Modelo</label>
+                        <input type="number" id="vAnoMod" placeholder="2021" min="1900" max="2099" />
+                    </div>
+                    <div class="form-group">
+                        <label>Cor *</label>
+                        <input type="text" id="vCor" placeholder="Branco" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Combustível</label>
+                        <select id="vCombustivel">
+                            <option value="Flex">Flex</option>
+                            <option value="Gasolina">Gasolina</option>
+                            <option value="Etanol">Etanol</option>
+                            <option value="Diesel">Diesel</option>
+                            <option value="Elétrico">Elétrico</option>
+                            <option value="GNV">GNV</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Câmbio</label>
+                        <select id="vCambio">
+                            <option value="Manual">Manual</option>
+                            <option value="Automático">Automático</option>
+                            <option value="CVT">CVT</option>
+                            <option value="Automatizado">Automatizado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Quilometragem</label>
+                        <input type="number" id="vKm" placeholder="50000" min="0" />
+                    </div>
+                    <div class="form-group">
+                        <label>Preço de Compra (R$) *</label>
+                        <input type="text" id="vPrecoCompra" placeholder="0,00" class="currency-input" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Preço de Venda Desejado (R$)</label>
+                        <input type="text" id="vPrecoVenda" placeholder="0,00" class="currency-input" />
+                    </div>
+                    <div class="form-group form-group-full">
+                        <label>Observações</label>
+                        <textarea id="vObs" rows="3" placeholder="Detalhes adicionais..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" data-close="modalVeiculo">Cancelar</button>
+                <button class="btn btn-primary" id="btnSalvarVeiculo">Salvar Veículo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Compra -->
+    <div class="modal-overlay" id="modalCompra">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalCompraTitle">Registrar Compra</h2>
+                <button class="btn-close" data-close="modalCompra"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="formCompra" class="form-grid">
+                    <input type="hidden" id="compraId" />
+                    <div class="form-group">
+                        <label>Data da Compra *</label>
+                        <input type="date" id="cData" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Veículo *</label>
+                        <select id="cVeiculo" required>
+                            <option value="">Selecione...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Fornecedor / Vendedor</label>
+                        <input type="text" id="cFornecedor" placeholder="Nome ou empresa" />
+                    </div>
+                    <div class="form-group">
+                        <label>Valor Pago (R$) *</label>
+                        <input type="text" id="cValor" placeholder="0,00" class="currency-input" required />
+                    </div>
+                    <div class="form-group form-group-full">
+                        <label>Observações</label>
+                        <textarea id="cObs" rows="3" placeholder="Condições de pagamento, detalhes..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" data-close="modalCompra">Cancelar</button>
+                <button class="btn btn-primary" id="btnSalvarCompra">Salvar Compra</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Venda -->
+    <div class="modal-overlay" id="modalVenda">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 id="modalVendaTitle">Registrar Venda</h2>
+                <button class="btn-close" data-close="modalVenda"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="formVenda" class="form-grid">
+                    <input type="hidden" id="vendaId" />
+                    <div class="form-group">
+                        <label>Data da Venda *</label>
+                        <input type="date" id="vdData" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Veículo *</label>
+                        <select id="vdVeiculo" required>
+                            <option value="">Selecione...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Comprador</label>
+                        <input type="text" id="vdComprador" placeholder="Nome do comprador" />
+                    </div>
+                    <div class="form-group">
+                        <label>Valor de Venda (R$) *</label>
+                        <input type="text" id="vdValor" placeholder="0,00" class="currency-input" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Custo de Aquisição (R$)</label>
+                        <input type="text" id="vdCusto" placeholder="0,00" class="currency-input" readonly />
+                    </div>
+                    <div class="form-group">
+                        <label>Lucro Estimado (R$)</label>
+                        <input type="text" id="vdLucro" placeholder="0,00" class="currency-input" readonly />
+                    </div>
+                    <div class="form-group form-group-full">
+                        <label>Observações</label>
+                        <textarea id="vdObs" rows="3" placeholder="Condições de pagamento, detalhes..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" data-close="modalVenda">Cancelar</button>
+                <button class="btn btn-primary" id="btnSalvarVenda">Salvar Venda</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmação -->
+    <div class="modal-overlay" id="modalConfirm">
+        <div class="modal modal-sm">
+            <div class="modal-header">
+                <h2>Confirmar Exclusão</h2>
+                <button class="btn-close" data-close="modalConfirm"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMsg">Tem certeza que deseja excluir este registro?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" data-close="modalConfirm">Cancelar</button>
+                <button class="btn btn-danger" id="btnConfirmDelete">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
